@@ -1,4 +1,5 @@
 import 'package:app_poemas/src/bloc/blocs.dart';
+import 'package:app_poemas/src/pages/add-poemas/add_poems.dart';
 import 'package:app_poemas/src/pages/signin/sign-in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -94,6 +95,13 @@ class ProfileUser extends StatelessWidget {
                   const SizedBox(
                     height: 30,
                   ),
+                  TextButton(
+                      onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const AppPoemas(),
+                            ),
+                          ),
+                      child: Text('Agregar Poemas')),
                   const Text(
                     'Informacion Legal',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
