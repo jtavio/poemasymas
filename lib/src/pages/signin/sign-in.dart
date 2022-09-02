@@ -173,8 +173,8 @@ class _SignInState extends State<SignIn> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const HomeAuthors()));
+                            Navigator.of(context)
+                                .pushReplacementNamed(HomeAuthors.routeName);
                           },
                           child: Text("Continuar como Visitante"),
                         ),

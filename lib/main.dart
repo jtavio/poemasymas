@@ -1,3 +1,5 @@
+import 'package:app_poemas/constants.dart';
+import 'package:app_poemas/src/routes/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,16 +43,21 @@ void main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     FirebaseAnalytics analytics = FirebaseAnalytics.instance;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: Constants.AppName,
       initialRoute: HomeAuthors.routeName,
       theme: ThemeData(
         backgroundColor: Colors.grey[100],
@@ -58,6 +65,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.deepOrangeAccent[100],
       ),
       darkTheme: ThemeData.dark(),
+      routes: routes,
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {

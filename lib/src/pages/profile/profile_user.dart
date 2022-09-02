@@ -7,9 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProfileUser extends StatelessWidget {
+class ProfileUser extends StatefulWidget {
+  static var routeName = 'profile';
+
   const ProfileUser({Key? key}) : super(key: key);
 
+  @override
+  State<ProfileUser> createState() => _ProfileUserState();
+}
+
+class _ProfileUserState extends State<ProfileUser> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -95,13 +102,51 @@ class ProfileUser extends StatelessWidget {
                   const SizedBox(
                     height: 30,
                   ),
-                  TextButton(
-                      onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const AppPoemas(),
-                            ),
+                  Material(
+                    child: InkWell(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AppPoemas(),
+                        ),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xFFdddddd))),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const <Widget>[
+                              Icon(Icons.post_add_outlined,
+                                  size: 20.0, color: Colors.white),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                'Escribir Poemas',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.white),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 15,
+                                color: Colors.white,
+                              ),
+                            ],
                           ),
-                      child: Text('Agregar Poemas')),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   const Text(
                     'Informacion Legal',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),

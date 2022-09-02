@@ -22,21 +22,21 @@ class AuthorsBloc extends Bloc<AuthorsEvent, AuthorsState> {
         })));
   }
 
-  Future getAllAuthors() async {
-    final authorAll = await httpServices.getAllAuthors();
-    if (authorAll != null) {
-      add(LoadApiEvent(authorAll));
-    }
-    add(HomeAuthorsErrorEvent());
-  }
+  // Future getAllAuthors() async {
+  //   final authorAll = await httpServices.getAllAuthors();
+  //   if (authorAll != null) {
+  //     add(LoadApiEvent(authorAll));
+  //   }
+  //   add(HomeAuthorsErrorEvent());
+  // }
 
-  Future queryAuthors(query) async {
-    final authorAll = await httpServices.queryAuthors(query);
-    if (authorAll != null) {
-      add(NewAuthorsQueryEvent(authorAll));
-    }
-    add(HomeAuthorsErrorEvent());
-  }
+  // Future queryAuthors(query) async {
+  //   final authorAll = await httpServices.queryAuthors(query);
+  //   if (authorAll != null) {
+  //     add(NewAuthorsQueryEvent(authorAll));
+  //   }
+  //   add(HomeAuthorsErrorEvent());
+  // }
 
   // emit(HomeAuthorsLoadingState());
   // emit(HomeAuthorsLoadedState(authorAll));

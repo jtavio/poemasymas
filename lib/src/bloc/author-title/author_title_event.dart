@@ -8,9 +8,9 @@ abstract class AuthorTitleEvent extends Equatable {
 }
 
 class LoadApiTitleForAuthorEvent extends AuthorTitleEvent {
-  final List<AuthorItem> poemsTitle;
+  final Author author;
 
-  const LoadApiTitleForAuthorEvent(this.poemsTitle);
+  const LoadApiTitleForAuthorEvent(this.author);
 }
 
 class SaveNameAuthor extends AuthorTitleEvent {
@@ -32,7 +32,7 @@ class DeleteStatePoemByAuthor extends AuthorTitleEvent {
 }
 
 class DeleteTitlePoemState extends AuthorTitleEvent {
-  final List<AuthorItem> poemsTitle;
+  final Author deleteAuthor;
 
-  const DeleteTitlePoemState(this.poemsTitle);
+  const DeleteTitlePoemState(this.deleteAuthor);
 }

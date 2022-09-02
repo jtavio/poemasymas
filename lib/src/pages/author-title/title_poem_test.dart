@@ -1,4 +1,5 @@
 import 'package:app_poemas/src/bloc/blocs.dart';
+import 'package:app_poemas/src/models/data_firestore.dart';
 import 'package:app_poemas/src/pages/author-title/author_title_poems.dart';
 import 'dart:io' show Platform, exit;
 import 'package:flutter/material.dart';
@@ -8,25 +9,24 @@ import 'package:share_plus/share_plus.dart';
 
 class TitlePoemByAuthor extends StatefulWidget {
   static const routeName = '/titlepoem';
-  final String title;
-  const TitlePoemByAuthor({this.title = ''});
 
   @override
   State<TitlePoemByAuthor> createState() => _TitlePoemByAuthorState();
 }
 
 class _TitlePoemByAuthorState extends State<TitlePoemByAuthor> {
+  Author? title;
   Future<bool> _onWillPop() async {
     return (await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit an App'),
+            title: const Text('Are you sure?'),
+            content: const Text('Do you want to exit an App'),
             actions: <Widget>[
               TextButton(
                 onPressed: () =>
                     Navigator.of(context).pop(false), //<-- SEE HERE
-                child: new Text('No'),
+                child: const Text('No'),
               ),
               TextButton(
                 onPressed: () {
@@ -36,12 +36,19 @@ class _TitlePoemByAuthorState extends State<TitlePoemByAuthor> {
                     exit(0);
                   }
                 },
-                child: new Text('Yes'),
+                child: const Text('Yes'),
               ),
             ],
           ),
         )) ??
         false;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    title = BlocProvider.of<AuthorTitleBloc>(context).state.author!;
   }
 
   @override
@@ -51,8 +58,8 @@ class _TitlePoemByAuthorState extends State<TitlePoemByAuthor> {
       child: Scaffold(
         body: Stack(
           children: [
-            _MainScroll(widget.title),
-            Positioned(bottom: 30, right: 10, child: _BotonShared())
+            _MainScroll(title),
+            Positioned(bottom: 30, right: 10, child: _BotonShared(title))
           ],
         ),
       ),
@@ -61,6 +68,9 @@ class _TitlePoemByAuthorState extends State<TitlePoemByAuthor> {
 }
 
 class _BotonShared extends StatelessWidget {
+  Author? title;
+  _BotonShared(this.title);
+
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -72,25 +82,24 @@ class _BotonShared extends StatelessWidget {
         tooltip: 'shared',
         onPressed: () async {
           String result = '';
-          final nameTitle =
-              BlocProvider.of<AuthorTitleBloc>(context).state.titlePoem;
-          for (final elem in nameTitle) {
-            final texto = elem.lines;
+          // final nameTitle =
+          //     BlocProvider.of<AuthorTitleBloc>(context).state.titlePoem;
+          // for (final elem in nameTitle) {
+          //   final texto = elem.lines;
 
-            result = texto.join('');
-            print('${elem.author}');
+          //   result = texto.join('');
+          //   print('${elem.author}');
 
-            await Share.share(
-                'Title: ${elem.title}\nAuthor: ${elem.author}\n$result',
-                subject: 'Title: ${elem.author}');
-          }
+          await Share.share(
+              'Title: ${title!.title}\n${title!.lineas!.join(' ')}',
+              subject: 'Title: ${title!.author}');
         });
   }
 }
 
 class _MainScroll extends StatelessWidget {
-  String title;
-  _MainScroll(this.title);
+  Author? value;
+  _MainScroll(this.value);
 
   @override
   Widget build(BuildContext context) {
@@ -110,28 +119,26 @@ class _MainScroll extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.centerLeft,
                   color: Colors.deepOrangeAccent[100],
-                  child: _Titulo(title),
+                  child: _Titulo(value),
                 ))),
         SliverList(
           delegate: SliverChildListDelegate(
             [
               BlocBuilder<AuthorTitleBloc, AuthorTitleState>(
                 builder: (context, state) {
-                  if (state.titlePoem.isNotEmpty) {
-                    final linesArr = state.titlePoem[0].lines.length;
-                    final showLines = state.titlePoem[0].lines;
+                  if (state.author != null) {
                     return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: linesArr,
+                      itemCount: state.author!.lineas!.length,
                       itemBuilder: (context, index) {
                         return Center(
                             child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: Text(
-                            showLines[index],
+                            '" ${state.author!.lineas![index]} "',
                             style: const TextStyle(
-                              fontSize: 15,
+                              fontSize: 20,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -190,45 +197,58 @@ class _SliverCustomHeaderDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class _Titulo extends StatelessWidget {
-  String title;
-  _Titulo(this.title);
+  Author? value;
+  _Titulo(this.value);
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              BlocProvider.of<AuthorTitleBloc>(context, listen: false)
-                  .add(const DeleteStatePoemByAuthor([]));
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => AuthorTitle(),
-                ),
-              );
+              // BlocProvider.of<AuthorTitleBloc>(context, listen: false)
+              //     .add(const DeleteStatePoemByAuthor([]));
+              Navigator.of(context).pop();
             }),
         Flexible(
           child: Padding(
-            padding: const EdgeInsets.only(left: 35, right: 25),
+            padding: const EdgeInsets.only(left: 50, right: 5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(
-                  height: 5,
-                ),
                 Text(
-                  title,
+                  value!.title.toString(),
                   style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
-                )
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
               ],
             ),
           ),
-        )
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Text(
+                textAlign: TextAlign.left,
+                'author: ${value!.author}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

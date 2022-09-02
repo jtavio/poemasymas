@@ -1,14 +1,23 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
+import 'package:app_poemas/src/bloc/blocs.dart';
+import 'package:app_poemas/src/pages/profile/profile_user.dart';
+import 'package:app_poemas/src/services/https_services.dart';
 import 'package:app_poemas/src/widgets/custom_multiline_text_field.dart';
 import 'package:app_poemas/src/widgets/poem_custom_text_field.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppPoemas extends StatefulWidget {
-  static const routeName = 'add-poems';
+  static const routeName = '/add-poems';
+
   const AppPoemas({Key? key}) : super(key: key);
 
   @override
@@ -19,10 +28,20 @@ class _AppPoemasState extends State<AppPoemas> {
   final TextEditingController _lineStepsController = TextEditingController();
   final List<String> _previewStepsList = [];
   final TextEditingController _recipeNameController = TextEditingController();
+  AuthorTitleBloc? addPoem;
+  final user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    addPoem = BlocProvider.of<AuthorTitleBloc>(context);
+  }
 
   @override
   void dispose() {
     super.dispose();
+
     _lineStepsController.dispose();
     _recipeNameController.dispose();
   }
@@ -37,6 +56,14 @@ class _AppPoemasState extends State<AppPoemas> {
         ),
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back, color: Colors.white),
+        //   onPressed: () => Navigator.of(context).push(
+        //     MaterialPageRoute(
+        //       builder: (context) => const ProfileUser(),
+        //     ),
+        //   ),
+        // ),
       ),
       body: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
@@ -70,9 +97,7 @@ class _AppPoemasState extends State<AppPoemas> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
-                    onPressed: () {
-                      print('hola');
-                    },
+                    onPressed: _addPoems,
                     style: ElevatedButton.styleFrom(
                         primary: Colors.deepOrangeAccent[100]),
                     child: const Text('Añadir Poema'),
@@ -113,6 +138,47 @@ class _AppPoemasState extends State<AppPoemas> {
     List<String> lines = ls.convert(controller.value.text);
     for (var i = 0; i < lines.length; i++) {
       _previewStepsList.add(lines[i]);
+    }
+  }
+
+  _addPoems() async {
+    if (_recipeNameController.value.text.isNotEmpty &&
+        _lineStepsController.value.text.isNotEmpty) {
+      LineSplitter ls = const LineSplitter();
+      List<String> lines = ls.convert(_lineStepsController.value.text);
+      final docData = <String, dynamic>{
+        'title': _recipeNameController.value.text,
+        'lineas': lines,
+        'author': user!.displayName,
+      };
+      print('docData $docData');
+      bool res = await addPoem!.addPoemsAuthor(user!.uid, docData);
+      res
+          // ignore: use_build_context_synchronously
+          ? CherryToast.success(
+              title: const Text(
+                "Procesado con exito!!",
+                style: TextStyle(color: Colors.black, fontSize: 16),
+              ),
+            ).show(context)
+          : CherryToast.error(
+              title: const Text(
+                'En este momento no podemos procesar la solicitud, Por favor intente mas tarde agregar un poema',
+                style: TextStyle(color: Colors.black, fontSize: 16),
+              ),
+            ).show(context);
+      _recipeNameController.clear();
+      _lineStepsController.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color.fromARGB(255, 252, 252, 252),
+          content: Text(
+            'Por favor completa todos los campos',
+            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
+          ),
+        ),
+      );
     }
   }
 }

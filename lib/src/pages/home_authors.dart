@@ -24,7 +24,7 @@ class _HomeAuthorsState extends State<HomeAuthors> {
             snackBar: const SnackBar(
               content: Text('Tap back again to exit app'),
             ),
-            child: Routes(index: currentTabIndex),
+            child: TabsScreen(index: currentTabIndex),
           ),
           bottomNavigationBar: CustomBottomNavigationBar(),
         );

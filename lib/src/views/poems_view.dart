@@ -31,8 +31,8 @@ class _PoemsViewState extends State<PoemsView> {
     super.initState();
     FirebaseAnalytics.instance.setCurrentScreen(
         screenName: 'Home-View', screenClassOverride: 'Home-View');
-    authorsBloc = BlocProvider.of<AuthorsBloc>(context);
-    authorsBloc.getAllAuthors();
+    // authorsBloc = BlocProvider.of<AuthorsBloc>(context);
+    // authorsBloc.getAllAuthors();
   }
 
   _validateValues() {
@@ -42,7 +42,7 @@ class _PoemsViewState extends State<PoemsView> {
       print('esto es: ${editingController.text}');
       BlocProvider.of<AuthorsBloc>(context, listen: false)
           .add(RemoveDataAuthorsEvent());
-      authorsBloc.queryAuthors(editingController.text);
+      // authorsBloc.queryAuthors(editingController.text);
     }
   }
 
