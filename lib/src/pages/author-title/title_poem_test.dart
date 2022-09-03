@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TitlePoemByAuthor extends StatefulWidget {
   static const routeName = '/titlepoem';
@@ -285,7 +284,7 @@ class _Titulo extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 10.0),
               child: Text(
                 textAlign: TextAlign.left,
-                'author: ${capitalize(value!.author)}',
+                'autor: ${capitalize(value!.author)}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
