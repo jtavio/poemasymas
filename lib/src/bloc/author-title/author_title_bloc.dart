@@ -14,11 +14,11 @@ class AuthorTitleBloc extends Bloc<AuthorTitleEvent, AuthorTitleState> {
     on<LoadApiTitleForAuthorEvent>(
         (event, emit) => emit(state.copyWith(author: event.author)));
     on<SaveNameAuthor>(
-        (event, emit) => emit(state.copyWith(nameAuthor: event.nameAuthor)));
+        (event, emit) => emit(state.copyWith(counterLike: event.counterLike)));
     on<SaveTitlePoemByAuthor>(
         (event, emit) => emit(state.copyWith(titlePoem: event.titlePoem)));
-    on<DeleteStatePoemByAuthor>(
-        (event, emit) => emit(state.copyWith(titlePoem: event.titlePoem)));
+    on<DeleteCounterLikeState>(
+        (event, emit) => emit(state.copyWith(counterLike: event.counter)));
     on<DeleteTitlePoemState>(
         (event, emit) => emit(state.copyWith(author: event.deleteAuthor)));
   }
@@ -33,8 +33,12 @@ class AuthorTitleBloc extends Bloc<AuthorTitleEvent, AuthorTitleState> {
   //   add(SaveTitlePoemByAuthor(titlePoem));
   // }
 
-  Future addPoemsAuthor(String id, Map<String, dynamic> value) async {
-    bool res = await httpServices.addPoemsAuthor(id, value);
+  Future addPoemsAuthor(Map<String, dynamic> value) async {
+    bool res = await httpServices.addPoemsAuthor(value);
     return res;
+  }
+
+  Future addLike(String id, int value) async {
+    await httpServices.addLike(id, value);
   }
 }

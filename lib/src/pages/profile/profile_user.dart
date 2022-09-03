@@ -17,15 +17,21 @@ class ProfileUser extends StatefulWidget {
 }
 
 class _ProfileUserState extends State<ProfileUser> {
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerName = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    String capitalize(String? s) => s![0].toUpperCase() + s.substring(1);
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      _controllerEmail.text = capitalize(user.email!);
+      _controllerName.text = capitalize(user.displayName!);
       return Scaffold(
           appBar: AppBar(
             centerTitle: true,
             title: const Text(
-              'My Account',
+              'Mi Cuenta',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -83,22 +89,53 @@ class _ProfileUserState extends State<ProfileUser> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Text(
-                    'Email: ${user.email}',
-                    style: const TextStyle(fontSize: 20),
+                  Row(
+                    children: [
+                      const Text(
+                        'Correo: ',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _controllerEmail,
+                          enabled: false,
+                        ),
+                      ),
+                    ],
                   ),
+                  // Text(
+                  //   'Email: ${user.email}',
+                  //   style: const TextStyle(fontSize: 20),
+                  // ),
                   const SizedBox(
                     height: 10,
                   ),
-                  user.displayName != null
-                      ? Text(
-                          'Name: ${user.displayName}',
-                          style: const TextStyle(fontSize: 20),
-                        )
-                      : const Text(
-                          'Name',
-                          style: TextStyle(fontSize: 20),
-                        ),
+                  Row(
+                    children: [
+                      const Text(
+                        'Nombre: ',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      user.displayName != null
+                          ? Expanded(
+                              child: TextField(
+                                controller: _controllerName,
+                                enabled: false,
+                              ),
+                            )
+                          : const Text(
+                              '',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                      // Expanded(
+                      //   child: TextField(
+                      //     controller: _controllerName,
+                      //     enabled: false,
+                      //   ),
+                      // ),
+                    ],
+                  ),
+
                   const SizedBox(
                     height: 30,
                   ),

@@ -34,7 +34,7 @@ class _InitPoemsState extends State<InitPoems> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          'Poems',
+          'Poemas',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 20,
@@ -57,28 +57,28 @@ class _InitPoemsState extends State<InitPoems> {
         },
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 8.0, right: 8.0, top: 8.0, bottom: 15.0),
-              child: TextField(
-                onChanged: (value) {
-                  widget.streamController.add(value);
-                },
-                controller: widget.editingController,
-                decoration: const InputDecoration(
-                  labelText: "Search",
-                  hintText: "Search",
-                  labelStyle:
-                      TextStyle(color: Color.fromARGB(255, 82, 209, 171)),
-                  prefixIcon: Icon(Icons.search,
-                      color: Color.fromARGB(255, 82, 209, 171)),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Color.fromARGB(255, 82, 209, 171)),
-                  ),
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(
+            //       left: 8.0, right: 8.0, top: 8.0, bottom: 15.0),
+            //   child: TextField(
+            //     onChanged: (value) {
+            //       widget.streamController.add(value);
+            //     },
+            //     controller: widget.editingController,
+            //     decoration: const InputDecoration(
+            //       labelText: "Search",
+            //       hintText: "Search",
+            //       labelStyle:
+            //           TextStyle(color: Color.fromARGB(255, 82, 209, 171)),
+            //       prefixIcon: Icon(Icons.search,
+            //           color: Color.fromARGB(255, 82, 209, 171)),
+            //       focusedBorder: UnderlineInputBorder(
+            //         borderSide:
+            //             BorderSide(color: Color.fromARGB(255, 82, 209, 171)),
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
@@ -86,8 +86,10 @@ class _InitPoemsState extends State<InitPoems> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return const Text(
-                        'En este momento no podemos procesar tu solicitud');
+                    return const Center(
+                      child: Text(
+                          'En este momento no podemos procesar tu solicitud'),
+                    );
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -101,7 +103,8 @@ class _InitPoemsState extends State<InitPoems> {
                         child: Text('No hay Peomas para mostrar'));
                   }
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8.0),
                     child: GridView(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -119,7 +122,7 @@ class _InitPoemsState extends State<InitPoems> {
                                 children: [
                                   Text(res[index]['title'],
                                       style: const TextStyle(fontSize: 20)),
-                                  Text(res[index]['lineas'][0],
+                                  Text('${res[index]['lineas'][0]}...',
                                       maxLines: 3,
                                       style: const TextStyle(fontSize: 16)),
                                   MaterialButton(
@@ -134,8 +137,21 @@ class _InitPoemsState extends State<InitPoems> {
                                           .getItemTitleAuthor(res[index].id);
                                       //  widget.titleAuthor.add(
                                       //      SaveNameAuthor(state.authors!.authors[index]));
-                                      await Navigator.of(context).pushNamed(
-                                          TitlePoemByAuthor.routeName);
+                                      // ignore: use_build_context_synchronously
+                                      // await Navigator.of(context).pushNamed(
+                                      //     TitlePoemByAuthor.routeName,
+                                      //     arguments: {
+                                      //       res[index].id,
+                                      //       res[index]['likes']
+                                      //     });
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TitlePoemByAuthor(
+                                                  id: res[index].id,
+                                              ),
+                                        ),
+                                      );
                                     },
                                     child: const Text(
                                       'Leer...',

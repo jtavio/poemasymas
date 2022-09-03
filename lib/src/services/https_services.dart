@@ -49,6 +49,11 @@ class HttpServices {
     // return data;
   }
 
+  Future addLike(String id, int more) async {
+    final likeRef = db.collection("authors").doc(id);
+    likeRef.update({"likes": more});
+  }
+
   // Future<List<TitleByAuthor>> getTitlePoem(String name, String title) async {
   //   final resp = await get(Uri.parse('$url/author,title/$name;$title'));
   //   final data = titleByAuthorFromJson(resp.body);
@@ -56,7 +61,7 @@ class HttpServices {
   //   return data;
   // }
 
-  Future<bool> addPoemsAuthor(String id, Map<String, dynamic> value) async {
+  Future<bool> addPoemsAuthor(Map<String, dynamic> value) async {
     // final data5 = <String, dynamic>{
     //   "name": "Beijing",
     //   "state": null,

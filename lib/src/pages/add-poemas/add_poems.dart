@@ -3,8 +3,6 @@
 import 'dart:convert';
 
 import 'package:app_poemas/src/bloc/blocs.dart';
-import 'package:app_poemas/src/pages/profile/profile_user.dart';
-import 'package:app_poemas/src/services/https_services.dart';
 import 'package:app_poemas/src/widgets/custom_multiline_text_field.dart';
 import 'package:app_poemas/src/widgets/poem_custom_text_field.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -55,6 +53,7 @@ class _AppPoemasState extends State<AppPoemas> {
           'Nuevo Poema',
         ),
         centerTitle: true,
+        backgroundColor: const Color(0xFFFF9E80),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         // leading: IconButton(
         //   icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -100,7 +99,10 @@ class _AppPoemasState extends State<AppPoemas> {
                     onPressed: _addPoems,
                     style: ElevatedButton.styleFrom(
                         primary: Colors.deepOrangeAccent[100]),
-                    child: const Text('Añadir Poema'),
+                    child: const Text(
+                      'Añadir Poema',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
                 )
               ],
@@ -142,17 +144,19 @@ class _AppPoemasState extends State<AppPoemas> {
   }
 
   _addPoems() async {
+    String capitalize(String? s) => s![0].toUpperCase() + s.substring(1);
     if (_recipeNameController.value.text.isNotEmpty &&
         _lineStepsController.value.text.isNotEmpty) {
       LineSplitter ls = const LineSplitter();
       List<String> lines = ls.convert(_lineStepsController.value.text);
       final docData = <String, dynamic>{
-        'title': _recipeNameController.value.text,
+        'title': capitalize(_recipeNameController.value.text),
         'lineas': lines,
         'author': user!.displayName,
+        'likes': 0
       };
       print('docData $docData');
-      bool res = await addPoem!.addPoemsAuthor(user!.uid, docData);
+      bool res = await addPoem!.addPoemsAuthor(docData);
       res
           // ignore: use_build_context_synchronously
           ? CherryToast.success(

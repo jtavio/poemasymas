@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TitlePoemByAuthor extends StatefulWidget {
   static const routeName = '/titlepoem';
+  String? id;
+  TitlePoemByAuthor({Key? key, this.id}) : super(key: key);
 
   @override
   State<TitlePoemByAuthor> createState() => _TitlePoemByAuthorState();
@@ -59,7 +62,8 @@ class _TitlePoemByAuthorState extends State<TitlePoemByAuthor> {
         body: Stack(
           children: [
             _MainScroll(title),
-            Positioned(bottom: 30, right: 10, child: _BotonShared(title))
+            Positioned(
+                bottom: 30, right: 10, child: _BotonShared(title, widget.id))
           ],
         ),
       ),
@@ -67,33 +71,74 @@ class _TitlePoemByAuthorState extends State<TitlePoemByAuthor> {
   }
 }
 
-class _BotonShared extends StatelessWidget {
+class _BotonShared extends StatefulWidget {
+  String? id;
   Author? title;
-  _BotonShared(this.title);
+
+  _BotonShared(this.title, this.id);
 
   @override
+  State<_BotonShared> createState() => _BotonSharedState();
+}
+
+class _BotonSharedState extends State<_BotonShared> {
+  @override
   Widget build(BuildContext context) {
-    return IconButton(
-        icon: const Icon(
-          Icons.share_outlined,
-          color: Colors.white,
-          size: 35.0,
+    final nameTitle = BlocProvider.of<AuthorTitleBloc>(context);
+    int? sum;
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.favorite_border_outlined,
+            color: Colors.white,
+            size: 35.0,
+          ),
+          tooltip: 'like',
+          onPressed: () async {
+            setState(() {
+              sum = (widget.title!.likes! + 1);
+            });
+            AuthorTitleBloc addPoem = BlocProvider.of<AuthorTitleBloc>(context);
+            await addPoem.addLike(widget.id!, sum!);
+            addPoem.add(SaveNameAuthor(sum.toString()));
+          },
         ),
-        tooltip: 'shared',
-        onPressed: () async {
-          String result = '';
-          // final nameTitle =
-          //     BlocProvider.of<AuthorTitleBloc>(context).state.titlePoem;
-          // for (final elem in nameTitle) {
-          //   final texto = elem.lines;
+        nameTitle.state.counterLike == ""
+            ? Text(
+                '${widget.title!.likes!}',
+                style: const TextStyle(fontSize: 16),
+              )
+            : Text(
+                nameTitle.state.counterLike,
+                style: const TextStyle(fontSize: 16),
+              ),
+        const SizedBox(
+          width: 15,
+        ),
+        IconButton(
+            icon: const Icon(
+              Icons.share_outlined,
+              color: Colors.white,
+              size: 35.0,
+            ),
+            tooltip: 'shared',
+            onPressed: () async {
+              String result = '';
+              // final nameTitle =
+              //     BlocProvider.of<AuthorTitleBloc>(context).state.titlePoem;
+              // for (final elem in nameTitle) {
+              //   final texto = elem.lines;
 
-          //   result = texto.join('');
-          //   print('${elem.author}');
+              //   result = texto.join('');
+              //   print('${elem.author}');
 
-          await Share.share(
-              'Title: ${title!.title}\n${title!.lineas!.join(' ')}',
-              subject: 'Title: ${title!.author}');
-        });
+              await Share.share(
+                  'Title: ${widget.title!.title}\n${widget.title!.lineas!.join(' ')}',
+                  subject: 'Title: ${widget.title!.author}');
+            }),
+      ],
+    );
   }
 }
 
@@ -202,14 +247,15 @@ class _Titulo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String capitalize(String? s) => s![0].toUpperCase() + s.substring(1);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              // BlocProvider.of<AuthorTitleBloc>(context, listen: false)
-              //     .add(const DeleteStatePoemByAuthor([]));
+              BlocProvider.of<AuthorTitleBloc>(context, listen: false)
+                  .add(const DeleteCounterLikeState(''));
               Navigator.of(context).pop();
             }),
         Flexible(
@@ -239,7 +285,7 @@ class _Titulo extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 10.0),
               child: Text(
                 textAlign: TextAlign.left,
-                'author: ${value!.author}',
+                'author: ${capitalize(value!.author)}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

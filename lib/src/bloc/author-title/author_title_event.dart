@@ -14,9 +14,9 @@ class LoadApiTitleForAuthorEvent extends AuthorTitleEvent {
 }
 
 class SaveNameAuthor extends AuthorTitleEvent {
-  final String nameAuthor;
+  final String counterLike;
 
-  const SaveNameAuthor(this.nameAuthor);
+  const SaveNameAuthor(this.counterLike);
 }
 
 class SaveTitlePoemByAuthor extends AuthorTitleEvent {
@@ -25,10 +25,10 @@ class SaveTitlePoemByAuthor extends AuthorTitleEvent {
   const SaveTitlePoemByAuthor(this.titlePoem);
 }
 
-class DeleteStatePoemByAuthor extends AuthorTitleEvent {
-  final List<TitleByAuthor> titlePoem;
+class DeleteCounterLikeState extends AuthorTitleEvent {
+  final String counter;
 
-  const DeleteStatePoemByAuthor(this.titlePoem);
+  const DeleteCounterLikeState(this.counter);
 }
 
 class DeleteTitlePoemState extends AuthorTitleEvent {
