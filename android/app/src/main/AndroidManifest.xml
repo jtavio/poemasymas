@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.app_poemas">
+    package="com.apppoemas.poemasymas">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="Poesías y más"
         android:name="${applicationName}"

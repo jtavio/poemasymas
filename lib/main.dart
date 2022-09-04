@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: Constants.AppName,
-      initialRoute: HomeAuthors.routeName,
+      initialRoute: SignIn.routeName,
       theme: ThemeData(
         backgroundColor: Colors.grey[100],
         fontFamily: 'Montserrat',

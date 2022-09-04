@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_poemas/src/bloc/blocs.dart';
 
 class SignIn extends StatefulWidget {
-  static String routeName = "/signin";
+  static String routeName = "signin";
   const SignIn({Key? key}) : super(key: key);
 
   @override
@@ -44,7 +44,7 @@ class _SignInState extends State<SignIn> {
                 backgroundColor: Colors.red,
                 content: Text(
                   state.error,
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
             );
@@ -69,7 +69,7 @@ class _SignInState extends State<SignIn> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Sign In",
+                          "Inicia sesión",
                           style: TextStyle(
                             fontSize: 38,
                             fontWeight: FontWeight.bold,
@@ -95,7 +95,7 @@ class _SignInState extends State<SignIn> {
                                   validator: (value) {
                                     return value != null &&
                                             !EmailValidator.validate(value)
-                                        ? 'Enter a valid email'
+                                        ? 'Ingrese un email valido'
                                         : null;
                                   },
                                 ),
@@ -123,7 +123,7 @@ class _SignInState extends State<SignIn> {
                                       AutovalidateMode.onUserInteraction,
                                   validator: (value) {
                                     return value != null && value.length < 6
-                                        ? "Enter min. 6 characters"
+                                        ? "Ingrese un min. de 6 caracteres"
                                         : null;
                                   },
                                 ),
@@ -139,25 +139,60 @@ class _SignInState extends State<SignIn> {
                                           context);
                                     },
                                     style: ElevatedButton.styleFrom(
-                                        primary: Colors.deepOrangeAccent[100]),
-                                    child: const Text('Sign In'),
+                                      primary: Colors.deepOrangeAccent[100],
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 15.0,
+                                        vertical: 15.0,
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Iniciar sesión',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
                                   ),
                                 )
                               ],
                             ),
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            _authenticateWithGoogle(context);
-                          },
-                          icon: Image.network(
-                            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png",
-                            height: 30,
-                            width: 30,
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _authenticateWithGoogle(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              textStyle: const TextStyle(fontSize: 15),
+                              primary: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: Colors.white),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                                vertical: 10.0,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Image.network(
+                                  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png",
+                                  height: 30,
+                                  width: 30,
+                                ),
+                                const Text('Iniciar sesión con google')
+                              ],
+                            ),
                           ),
                         ),
-                        const Text("Don't have an account?"),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        const Text("No tienes una cuenta?"),
                         OutlinedButton(
                           onPressed: () {
                             Navigator.pushReplacement(
@@ -166,9 +201,12 @@ class _SignInState extends State<SignIn> {
                                   builder: (context) => const SignUp()),
                             );
                           },
-                          child: const Text("Sign Up"),
+                          child: const Text(
+                            "Registrate",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 25,
                         ),
                         TextButton(
@@ -176,7 +214,7 @@ class _SignInState extends State<SignIn> {
                             Navigator.of(context)
                                 .pushReplacementNamed(HomeAuthors.routeName);
                           },
-                          child: Text("Continuar como Visitante"),
+                          child: const Text("Continuar como Visitante"),
                         ),
                       ],
                     ),

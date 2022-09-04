@@ -66,4 +66,12 @@ class AuthRepository {
       throw Exception(e.toString());
     }
   }
+
+  Future<void> deleteAuth() async {
+    try {
+      await _firebaseAuth.currentUser!.delete();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

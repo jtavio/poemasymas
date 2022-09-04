@@ -26,7 +26,8 @@ class _ProfileUserState extends State<ProfileUser> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       _controllerEmail.text = capitalize(user.email!);
-      _controllerName.text = capitalize(user.displayName!);
+      _controllerName.text =
+          user.displayName != '' ? capitalize(user.displayName!) : '';
       return Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -50,155 +51,103 @@ class _ProfileUserState extends State<ProfileUser> {
                   }),
             ],
           ),
-          body: BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
-              if (state is UnAuthenticated) {
-                // Navigate to the sign in screen when the user Signs Out
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const SignIn()),
-                  (route) => false,
-                );
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  user.photoURL != null
-                      ? Center(
-                          child: CircleAvatar(
-                            radius: 40,
-                            child: ClipOval(
-                              child: FadeInImage(
-                                image: NetworkImage("${user.photoURL}"),
-                                placeholder: const AssetImage(
-                                    'assets/images/loading.gif'),
+          body: SingleChildScrollView(
+            child: BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state is UnAuthenticated) {
+                  // Navigate to the sign in screen when the user Signs Out
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const SignIn()),
+                    (route) => false,
+                  );
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    user.photoURL != null
+                        ? Center(
+                            child: CircleAvatar(
+                              radius: 40,
+                              child: ClipOval(
+                                child: FadeInImage(
+                                  image: NetworkImage("${user.photoURL}"),
+                                  placeholder: const AssetImage(
+                                      'assets/images/loading.gif'),
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      : const Center(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            backgroundImage:
-                                AssetImage('assets/images/account.png'),
-                            radius: 40,
-                          ),
-                        ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      const Text(
-                        'Correo: ',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: _controllerEmail,
-                          enabled: false,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Text(
-                  //   'Email: ${user.email}',
-                  //   style: const TextStyle(fontSize: 20),
-                  // ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      const Text(
-                        'Nombre: ',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      user.displayName != null
-                          ? Expanded(
-                              child: TextField(
-                                controller: _controllerName,
-                                enabled: false,
-                              ),
-                            )
-                          : const Text(
-                              '',
-                              style: TextStyle(fontSize: 20),
+                          )
+                        : const Center(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage:
+                                  AssetImage('assets/images/account.png'),
+                              radius: 40,
                             ),
-                      // Expanded(
-                      //   child: TextField(
-                      //     controller: _controllerName,
-                      //     enabled: false,
-                      //   ),
-                      // ),
-                    ],
-                  ),
-
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Material(
-                    child: InkWell(
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const AppPoemas(),
-                        ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                                width: 1.0, color: const Color(0xFFdddddd))),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const <Widget>[
-                              Icon(Icons.post_add_outlined,
-                                  size: 20.0, color: Colors.white),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                'Escribir Poemas',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.white),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 15,
-                                color: Colors.white,
-                              ),
-                            ],
                           ),
-                        ),
-                      ),
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  const Text(
-                    'Informacion Legal',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.start,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Material(
-                    child: Link(
-                      target: LinkTarget.self,
-                      uri: Uri.parse(
-                          'https://docs.google.com/document/d/1xhPE0pSVXE87WG24WRMXTmWaYWTkEllm/edit?usp=sharing&ouid=110195874036427963121&rtpof=true&sd=true'),
-                      builder: (context, followLink) => InkWell(
-                        onTap: followLink,
+                    Row(
+                      children: [
+                        const Text(
+                          'Correo: ',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _controllerEmail,
+                            enabled: false,
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Text(
+                    //   'Email: ${user.email}',
+                    //   style: const TextStyle(fontSize: 20),
+                    // ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          'Nombre: ',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        user.displayName != null
+                            ? Expanded(
+                                child: TextField(
+                                  controller: _controllerName,
+                                  enabled: false,
+                                ),
+                              )
+                            : const Text(
+                                '',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                        // Expanded(
+                        //   child: TextField(
+                        //     controller: _controllerName,
+                        //     enabled: false,
+                        //   ),
+                        // ),
+                      ],
+                    ),
+
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Material(
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const AppPoemas(),
+                          ),
+                        ),
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
@@ -210,18 +159,23 @@ class _ProfileUserState extends State<ProfileUser> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: const <Widget>[
-                                Icon(Icons.info_outline_rounded, size: 20.0),
+                                Icon(Icons.post_add_outlined,
+                                    size: 20.0, color: Colors.white),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                Text('Politicas de privacidad',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.normal)),
+                                Text(
+                                  'Escribir Poemas',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white),
+                                ),
                                 Spacer(),
                                 Icon(
                                   Icons.arrow_forward_ios,
                                   size: 15,
+                                  color: Colors.white,
                                 ),
                               ],
                             ),
@@ -229,8 +183,71 @@ class _ProfileUserState extends State<ProfileUser> {
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    const Text(
+                      'Informacion Legal',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.start,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Material(
+                      child: Link(
+                        target: LinkTarget.self,
+                        uri: Uri.parse(
+                            'https://docs.google.com/document/d/1xhPE0pSVXE87WG24WRMXTmWaYWTkEllm/edit?usp=sharing&ouid=110195874036427963121&rtpof=true&sd=true'),
+                        builder: (context, followLink) => InkWell(
+                          onTap: followLink,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    width: 1.0,
+                                    color: const Color(0xFFdddddd))),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: const <Widget>[
+                                  Icon(Icons.info_outline_rounded, size: 20.0),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Text('Politicas de privacidad',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal)),
+                                  Spacer(),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 15,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          _deleteAcount(context);
+                        },
+                        child: Text('Eliminar cuenta'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ));
@@ -296,5 +313,11 @@ class _ProfileUserState extends State<ProfileUser> {
         ]),
       ));
     }
+  }
+
+  void _deleteAcount(context) {
+    BlocProvider.of<AuthBloc>(context).add(
+      DeleteAuth(),
+    );
   }
 }

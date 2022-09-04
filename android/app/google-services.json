@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:153536167266:android:57dec288a593a50cce003b",
+        "mobilesdk_app_id": "1:153536167266:android:40b3bfa863f799d4ce003b",
         "android_client_info": {
-          "package_name": "com.example.app_poemas"
+          "package_name": "com.apppoemas.poemasymas"
         }
       },
       "oauth_client": [

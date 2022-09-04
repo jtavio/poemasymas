@@ -70,7 +70,7 @@ class _SignUpState extends State<SignUp> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Sign Up",
+                        "Registrate",
                         style: TextStyle(
                           fontSize: 38,
                           fontWeight: FontWeight.bold,
@@ -87,13 +87,15 @@ class _SignUpState extends State<SignUp> {
                               TextFormField(
                                 controller: _nameController,
                                 decoration: const InputDecoration(
-                                  hintText: "Name",
+                                  hintText: "Nombre",
                                   border: OutlineInputBorder(),
                                 ),
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 validator: (value) {
-                                  return value == '' ? 'Enter a name' : null;
+                                  return value == ''
+                                      ? 'Ingrese el nombre'
+                                      : null;
                                 },
                               ),
                               const SizedBox(
@@ -110,7 +112,7 @@ class _SignUpState extends State<SignUp> {
                                 validator: (value) {
                                   return value != null &&
                                           !EmailValidator.validate(value)
-                                      ? 'Enter a valid email'
+                                      ? 'Ingrese un email valido'
                                       : null;
                                 },
                               ),
@@ -127,7 +129,7 @@ class _SignUpState extends State<SignUp> {
                                     AutovalidateMode.onUserInteraction,
                                 validator: (value) {
                                   return value != null && value.length < 6
-                                      ? "Enter min. 6 characters"
+                                      ? "Ingrese un min. de 6 caracteres"
                                       : null;
                                 },
                               ),
@@ -142,7 +144,7 @@ class _SignUpState extends State<SignUp> {
                                   },
                                   style: ElevatedButton.styleFrom(
                                       primary: Colors.deepOrangeAccent[100]),
-                                  child: const Text('Sign Up'),
+                                  child: const Text('Registrar'),
                                 ),
                               )
                             ],
@@ -152,7 +154,7 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(
                         height: 12,
                       ),
-                      const Text("Already have an account?"),
+                      const Text("Tienes una cuenta?"),
                       OutlinedButton(
                         onPressed: () {
                           Navigator.pushReplacement(
@@ -161,12 +163,12 @@ class _SignUpState extends State<SignUp> {
                                 builder: (context) => const SignIn()),
                           );
                         },
-                        child: const Text("Sign In"),
+                        child: const Text("Iniciar sesión"),
                       ),
                       const SizedBox(
                         height: 12,
                       ),
-                      const Text("Or"),
+                      const Text("O"),
                       IconButton(
                         onPressed: () {
                           _authenticateWithGoogle(context);
