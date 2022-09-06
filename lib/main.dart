@@ -24,9 +24,6 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
-        create: (context) => AuthorsBloc(httpServices: HttpServices()),
-      ),
-      BlocProvider(
         create: (context) => AuthorTitleBloc(httpServices: HttpServices()),
       ),
       BlocProvider(

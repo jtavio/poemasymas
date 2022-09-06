@@ -135,21 +135,13 @@ class _InitPoemsState extends State<InitPoems> {
                                       print('${res[index].id}');
                                       await widget.titleAuthor
                                           .getItemTitleAuthor(res[index].id);
-                                      //  widget.titleAuthor.add(
-                                      //      SaveNameAuthor(state.authors!.authors[index]));
-                                      // ignore: use_build_context_synchronously
-                                      // await Navigator.of(context).pushNamed(
-                                      //     TitlePoemByAuthor.routeName,
-                                      //     arguments: {
-                                      //       res[index].id,
-                                      //       res[index]['likes']
-                                      //     });
+
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               TitlePoemByAuthor(
-                                                  id: res[index].id,
-                                              ),
+                                            id: res[index].id,
+                                          ),
                                         ),
                                       );
                                     },
@@ -166,105 +158,9 @@ class _InitPoemsState extends State<InitPoems> {
                       ),
                     ),
                   );
-
-                  // return ListView(
-                  //   children: snapshot.data!.docs
-                  //       .map((DocumentSnapshot document) {
-                  //         Map<String, dynamic> data =
-                  //             document.data()! as Map<String, dynamic>;
-                  //          return Row(
-                  //            children: [
-                  //              Expanded(
-                  //                  child: Card(child: Text(data['author']))),
-                  //         //     //subtitle: Text(data['company']),
-
-                  //         //     //subtitle: Text(data['company']),
-                  //          ],
-                  //         );
-                  //       })
-                  //       .toList()
-                  //       .cast(),
-                  // );
                 },
               ),
             )
-
-            // Expanded(
-            //   child: BlocBuilder<AuthorsBloc, AuthorsState>(
-            //     builder: (context, state) {
-            //       if (state.authors != null) {
-            //         final auth = state.authors!.authors.length.toInt();
-            //         return ListView.separated(
-            //           itemCount: auth,
-            //           separatorBuilder: (context, i) => const Divider(),
-            //           itemBuilder: (context, index) {
-            //             return ListTile(
-            //               title: Text(
-            //                 state.authors!.authors[index],
-            //                 style: const TextStyle(
-            //                   fontSize: 15,
-            //                   fontFamily: 'Montserrat',
-            //                   fontWeight: FontWeight.w600,
-            //                 ),
-            //               ),
-            //               onTap: () async {
-            //                 _registerEventAnalyticsAuthorTitle(
-            //                     state.authors!.authors[index]);
-            //                 // await titleAuthor.getItemTitleAuthor(
-            //                 //     state.authors!.authors[index]);
-            //                 titleAuthor.add(
-            //                     SaveNameAuthor(state.authors!.authors[index]));
-            //                 await Navigator.of(context).push(
-            //                   MaterialPageRoute(
-            //                     builder: (context) => AuthorTitle(),
-            //                   ),
-            //                 );
-            //               },
-            //             );
-            //           },
-            //         );
-            //       }
-            //       if (state.queryAuthors != null) {
-            //         final authQuery = state.queryAuthors!.length;
-            //         return ListView.separated(
-            //           itemCount: authQuery,
-            //           separatorBuilder: (context, i) => const Divider(),
-            //           itemBuilder: (context, index) {
-            //             return ListTile(
-            //               title: Text(
-            //                 state.queryAuthors![index].author,
-            //                 style: const TextStyle(
-            //                   fontSize: 15,
-            //                   fontFamily: 'Montserrat',
-            //                   fontWeight: FontWeight.w600,
-            //                 ),
-            //               ),
-            //               onTap: () async {
-            //                 // await titleAuthor.getItemTitleAuthor(
-            //                 //     state.queryAuthors![index].author);
-            //                 titleAuthor.add(SaveNameAuthor(
-            //                     state.queryAuthors![index].author));
-            //                 await Navigator.of(context).push(
-            //                   MaterialPageRoute(
-            //                     builder: (context) => AuthorTitle(),
-            //                   ),
-            //                 );
-            //               },
-            //             );
-            //           },
-            //         );
-            //       }
-            //       if (state.error != null) {
-            //         return Center(
-            //           child: Text(state.error!['message']),
-            //         );
-            //       }
-            //       return const Center(
-            //         child: CircularProgressIndicator(),
-            //       );
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),

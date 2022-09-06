@@ -19,7 +19,6 @@ class PoemsView extends StatefulWidget {
 
 class _PoemsViewState extends State<PoemsView> {
   final user = FirebaseAuth.instance.currentUser;
-  late AuthorsBloc authorsBloc;
   TextEditingController editingController = TextEditingController();
   StreamController<String> streamController = StreamController();
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
@@ -31,8 +30,6 @@ class _PoemsViewState extends State<PoemsView> {
     super.initState();
     FirebaseAnalytics.instance.setCurrentScreen(
         screenName: 'Home-View', screenClassOverride: 'Home-View');
-    // authorsBloc = BlocProvider.of<AuthorsBloc>(context);
-    // authorsBloc.getAllAuthors();
   }
 
   _validateValues() {
@@ -40,9 +37,6 @@ class _PoemsViewState extends State<PoemsView> {
       // code here
       Future.delayed(const Duration(seconds: 2));
       print('esto es: ${editingController.text}');
-      BlocProvider.of<AuthorsBloc>(context, listen: false)
-          .add(RemoveDataAuthorsEvent());
-      // authorsBloc.queryAuthors(editingController.text);
     }
   }
 
