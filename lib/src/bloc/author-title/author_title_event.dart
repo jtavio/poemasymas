@@ -19,12 +19,6 @@ class SaveNameAuthor extends AuthorTitleEvent {
   const SaveNameAuthor(this.counterLike);
 }
 
-class SaveTitlePoemByAuthor extends AuthorTitleEvent {
-  final List<TitleByAuthor> titlePoem;
-
-  const SaveTitlePoemByAuthor(this.titlePoem);
-}
-
 class DeleteCounterLikeState extends AuthorTitleEvent {
   final String counter;
 

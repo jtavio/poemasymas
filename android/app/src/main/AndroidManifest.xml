@@ -36,4 +36,5 @@
             android:value="ca-app-pub-2793000965286035~3088628659"/>
 
     </application>
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 </manifest>
