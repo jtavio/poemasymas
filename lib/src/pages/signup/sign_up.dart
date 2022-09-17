@@ -192,10 +192,11 @@ class _SignUpState extends State<SignUp> {
   }
 
   void _createAccountWithEmailAndPassword(BuildContext context) {
+    String capitalize(String? s) => s![0].toUpperCase() + s.substring(1);
     if (_formKey.currentState!.validate()) {
       BlocProvider.of<AuthBloc>(context).add(
         SignUpRequested(_emailController.text, _passwordController.text,
-            _nameController.text),
+            capitalize(_nameController.text)),
       );
     }
   }

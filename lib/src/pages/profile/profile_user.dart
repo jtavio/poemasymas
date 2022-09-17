@@ -1,11 +1,13 @@
+import 'package:app_poemas/constants.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/link.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:app_poemas/src/bloc/blocs.dart';
 import 'package:app_poemas/src/pages/add-poemas/add_poems.dart';
 import 'package:app_poemas/src/pages/signin/sign-in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/link.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProfileUser extends StatefulWidget {
   static var routeName = 'profile';
@@ -19,15 +21,22 @@ class ProfileUser extends StatefulWidget {
 class _ProfileUserState extends State<ProfileUser> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerName = TextEditingController();
+  final InAppReview inAppReview = InAppReview.instance;
+  User? user;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    user = FirebaseAuth.instance.currentUser;
+  }
 
   @override
   Widget build(BuildContext context) {
-    String capitalize(String? s) => s![0].toUpperCase() + s.substring(1);
-    final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      _controllerEmail.text = capitalize(user.email!);
+      _controllerEmail.text = user!.email!;
       _controllerName.text =
-          user.displayName != '' ? capitalize(user.displayName!) : '';
+          user!.displayName != null ? user!.displayName! : '';
       return Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -67,13 +76,13 @@ class _ProfileUserState extends State<ProfileUser> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    user.photoURL != null
+                    user!.photoURL != null
                         ? Center(
                             child: CircleAvatar(
                               radius: 40,
                               child: ClipOval(
                                 child: FadeInImage(
-                                  image: NetworkImage("${user.photoURL}"),
+                                  image: NetworkImage("${user!.photoURL}"),
                                   placeholder: const AssetImage(
                                       'assets/images/loading.gif'),
                                 ),
@@ -118,7 +127,7 @@ class _ProfileUserState extends State<ProfileUser> {
                           'Nombre: ',
                           style: TextStyle(fontSize: 16),
                         ),
-                        user.displayName != null
+                        user?.displayName != null
                             ? Expanded(
                                 child: TextField(
                                   controller: _controllerName,
@@ -184,7 +193,48 @@ class _ProfileUserState extends State<ProfileUser> {
                       ),
                     ),
                     const SizedBox(
-                      height: 30,
+                      height: 20,
+                    ),
+                    Material(
+                      child: InkWell(
+                        onTap: () {
+                          inAppReview.openStoreListing(
+                              appStoreId: '...',
+                              microsoftStoreId: Constants.GooglePlayIdentifier);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                  width: 1.0, color: const Color(0xFFdddddd))),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: const <Widget>[
+                                Icon(Icons.rate_review_outlined, size: 20.0),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text('Calificanos',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.normal)),
+                                Spacer(),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 40,
                     ),
                     const Text(
                       'Informacion Legal',
@@ -235,7 +285,7 @@ class _ProfileUserState extends State<ProfileUser> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 100,
                     ),
                     Center(
@@ -243,7 +293,7 @@ class _ProfileUserState extends State<ProfileUser> {
                         onPressed: () {
                           _deleteAcount(context);
                         },
-                        child: Text('Eliminar cuenta'),
+                        child: const Text('Eliminar cuenta'),
                       ),
                     ),
                   ],
@@ -253,65 +303,62 @@ class _ProfileUserState extends State<ProfileUser> {
           ));
     } else {
       return Scaffold(
-          body: Container(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Center(
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              backgroundImage: AssetImage('assets/images/account.png'),
-              radius: 60,
-            ),
+          body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Center(
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            backgroundImage: AssetImage('assets/images/account.png'),
+            radius: 60,
           ),
-          const Padding(
-            padding: EdgeInsets.all(15),
-            child: Text(
-                "Ingresa a tu cuenta para gestionar tu perfil, preferencias y más",
-                textAlign: TextAlign.center),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 25),
-              child: InkWell(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const SignIn(),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(15),
+          child: Text(
+              "Ingresa a tu cuenta para gestionar tu perfil, preferencias y más",
+              textAlign: TextAlign.center),
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25),
+            child: InkWell(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SignIn(),
+                ),
+              ),
+              child: Column(children: const [
+                Center(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: AssetImage('assets/images/account.png'),
+                    radius: 20,
                   ),
                 ),
-                child: Column(children: const [
-                  Center(
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: AssetImage('assets/images/account.png'),
-                      radius: 20,
-                    ),
+                Center(
+                  child: Text(
+                    "Ingresar",
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
-                  Center(
-                    child: Text(
-                      "Ingresar",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ]),
-              ),
+                ),
+              ]),
             ),
           ),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(vertical: 15),
-          //   child: InkWell(
-          //     onTap: () => Navigator.push(context,
-          //         MaterialPageRoute(builder: (context) => ContactUsScreen())),
-          //     child: listViewItem(
-          //         context,
-          //         Icon(
-          //           Icons.email,
-          //           color: Colors.black,
-          //         ),
-          //         'Contactanos'),
-          //   ),
-          // )
-        ]),
-      ));
+        ),
+        // Padding(
+        //   padding: EdgeInsets.symmetric(vertical: 15),
+        //   child: InkWell(
+        //     onTap: () => Navigator.push(context,
+        //         MaterialPageRoute(builder: (context) => ContactUsScreen())),
+        //     child: listViewItem(
+        //         context,
+        //         Icon(
+        //           Icons.email,
+        //           color: Colors.black,
+        //         ),
+        //         'Contactanos'),
+        //   ),
+        // )
+      ]));
     }
   }
 

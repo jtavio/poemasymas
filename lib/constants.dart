@@ -4,6 +4,9 @@ class Constants {
   ////////////////////////////////////////
   //           SPLASH SCREEN            //
   ////////////////////////////////////////
+  ///
+  ///
+  static const GooglePlayIdentifier = 'com.apppoemas.poemasymas';
 
   static const AppName = 'Poemas y más';
 

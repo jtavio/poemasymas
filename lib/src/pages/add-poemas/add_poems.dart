@@ -7,6 +7,7 @@ import 'package:app_poemas/src/widgets/custom_multiline_text_field.dart';
 import 'package:app_poemas/src/widgets/poem_custom_text_field.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -28,11 +29,14 @@ class _AppPoemasState extends State<AppPoemas> {
   final TextEditingController _recipeNameController = TextEditingController();
   AuthorTitleBloc? addPoem;
   final user = FirebaseAuth.instance.currentUser;
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    analytics.setCurrentScreen(
+        screenName: 'AddPoems', screenClassOverride: 'AddPoems');
     addPoem = BlocProvider.of<AuthorTitleBloc>(context);
   }
 
@@ -96,7 +100,11 @@ class _AppPoemasState extends State<AppPoemas> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
-                    onPressed: _addPoems,
+                    onPressed: () => {
+                      _registerEventAnalyticsAddPoems(
+                          _recipeNameController.value.text),
+                      _addPoems
+                    },
                     style: ElevatedButton.styleFrom(
                         primary: Colors.deepOrangeAccent[100]),
                     child: const Text(
@@ -184,6 +192,16 @@ class _AppPoemasState extends State<AppPoemas> {
         ),
       );
     }
+  }
+
+  Future _registerEventAnalyticsAddPoems(String value) async {
+    await analytics.logEvent(
+      name: 'addPoem',
+      parameters: <String, dynamic>{
+        'title': '$value',
+      },
+    );
+    // mostrarMensaje('logEvent succeeded');
   }
 }
 

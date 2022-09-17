@@ -39,17 +39,21 @@ class _InitPoemsState extends State<InitPoems> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    FirebaseAnalytics.instance.setCurrentScreen(
+        screenName: 'HomeInitPoems', screenClassOverride: 'HomeInitPoems');
     _bottomBannerAd = BannerAd(
       adUnitId: AdState.bannerProdId,
-      size: AdSize.banner,
+      size: AdSize.largeBanner,
       listener: BannerAdListener(
         onAdLoaded: (_) {
           setState(() {
+            print('onAdLoaded: true');
             _isBottomBannerAdLoaded = true;
           });
         },
         onAdFailedToLoad: (ad, error) {
           setState(() {
+            print('onAdLoaded: false');
             _isBottomBannerAdLoaded = false;
           });
           ad.dispose();
@@ -199,8 +203,8 @@ class _InitPoemsState extends State<InitPoems> {
             ? SizedBox(
                 height: _bottomBannerAd!.size.height.toDouble(),
                 width: _bottomBannerAd!.size.width.toDouble(),
-                child: Text('hola mundo'),
-                // child: AdWidget(ad: _bottomBannerAd),
+                //child: Text('hola mundo'),
+                child: AdWidget(ad: _bottomBannerAd!),
               )
             : SizedBox());
   }
