@@ -214,7 +214,10 @@ class _SignInState extends State<SignIn> {
                             Navigator.of(context)
                                 .pushReplacementNamed(HomeAuthors.routeName);
                           },
-                          child: const Text("Continuar como Visitante"),
+                          child: const Text(
+                            "Continuar como Visitante",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     ),

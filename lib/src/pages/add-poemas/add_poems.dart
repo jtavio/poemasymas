@@ -106,7 +106,7 @@ class _AppPoemasState extends State<AppPoemas> {
                       _addPoems
                     },
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.deepOrangeAccent[100]),
+                        backgroundColor: Colors.deepOrangeAccent[100]),
                     child: const Text(
                       'Añadir Poema',
                       style: TextStyle(fontSize: 16),

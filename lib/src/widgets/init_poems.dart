@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:app_poemas/ad_state.dart';
 import 'package:app_poemas/src/bloc/blocs.dart';
+import 'package:app_poemas/src/pages/add-poemas/add_poems.dart';
 import 'package:app_poemas/src/pages/author-title/title_poem_test.dart';
 import 'package:app_poemas/src/pages/signin/sign-in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -28,10 +30,11 @@ class InitPoems extends StatefulWidget {
 }
 
 class _InitPoemsState extends State<InitPoems> {
-  // ignore: unused_field
-  BannerAd? _bottomBannerAd;
-  // ignore: unused_field
-  bool _isBottomBannerAdLoaded = false;
+  static const AdRequest request = AdRequest();
+  late BannerAd _bannerAd;
+  bool _isBannerAdReady = false;
+  User? user;
+
   final Stream<QuerySnapshot> _usersStream =
       FirebaseFirestore.instance.collection('authors').snapshots();
 
@@ -41,26 +44,38 @@ class _InitPoemsState extends State<InitPoems> {
     super.initState();
     FirebaseAnalytics.instance.setCurrentScreen(
         screenName: 'HomeInitPoems', screenClassOverride: 'HomeInitPoems');
-    _bottomBannerAd = BannerAd(
-      adUnitId: AdState.bannerProdId,
+    _loadBannerAd();
+    user = FirebaseAuth.instance.currentUser;
+  }
+
+  void _loadBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: AdState.bannerUnitId,
+      request: const AdRequest(),
       size: AdSize.largeBanner,
       listener: BannerAdListener(
         onAdLoaded: (_) {
           setState(() {
             print('onAdLoaded: true');
-            _isBottomBannerAdLoaded = true;
+            _isBannerAdReady = true;
           });
         },
-        onAdFailedToLoad: (ad, error) {
-          setState(() {
-            print('onAdLoaded: false');
-            _isBottomBannerAdLoaded = false;
-          });
+        onAdFailedToLoad: (ad, err) {
+          print('onAdLoaded: false');
+          print('onAdLoaded: false $err');
+          print('onAdLoaded: false $ad');
+          _isBannerAdReady = false;
           ad.dispose();
         },
       ),
-      request: const AdRequest(),
-    )..load();
+    );
+    _bannerAd.load();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bannerAd.dispose();
   }
 
   @override
@@ -199,23 +214,61 @@ class _InitPoemsState extends State<InitPoems> {
             ],
           ),
         ),
-        bottomNavigationBar: _isBottomBannerAdLoaded
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 30.0),
+          child: FloatingActionButton.extended(
+            onPressed: _actionButtonFloat,
+            icon: const Icon(Icons.post_add_outlined),
+            label: const Text('Agregar'),
+          ),
+        ),
+        bottomNavigationBar: _isBannerAdReady
             ? SizedBox(
-                height: _bottomBannerAd!.size.height.toDouble(),
-                width: _bottomBannerAd!.size.width.toDouble(),
+                height: _bannerAd.size.height.toDouble(),
+                width: _bannerAd.size.width.toDouble(),
                 //child: Text('hola mundo'),
-                child: AdWidget(ad: _bottomBannerAd!),
+                child: AdWidget(ad: _bannerAd),
               )
-            : SizedBox());
+            : const SizedBox());
   }
 
   Future _registerEventAnalyticsAuthorTitle(String index) async {
     await widget.analytics.logEvent(
-      name: 'authorTitle',
+      name: 'authorTitleHome',
       parameters: <String, dynamic>{
         'id': '$index',
       },
     );
     // mostrarMensaje('logEvent succeeded');
+  }
+
+  void _actionButtonFloat() {
+    if (user != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const AppPoemas(),
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          //Here we will build the content of the dialog
+          return AlertDialog(
+            title: const Center(
+                child: Text(
+                    "Para agregar un poema debe registrarse o iniciar sesión")),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("Continuar"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        },
+      );
+    }
   }
 }
