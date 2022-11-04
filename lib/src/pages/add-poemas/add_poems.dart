@@ -31,13 +31,70 @@ class _AppPoemasState extends State<AppPoemas> {
   final user = FirebaseAuth.instance.currentUser;
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
+  prueba() {
+    print('jola');
+  }
+
+  authorsAddPoems() async {
+    String capitalize(String? s) => s![0].toUpperCase() + s.substring(1);
+    if (_recipeNameController.value.text.isNotEmpty &&
+        _lineStepsController.value.text.isNotEmpty) {
+      LineSplitter ls = const LineSplitter();
+      List<String> lines = ls.convert(_lineStepsController.value.text);
+      final docData = <String, dynamic>{
+        'title': capitalize(_recipeNameController.value.text),
+        'lineas': lines,
+        'author': user!.displayName,
+        'likes': 0
+      };
+      print('docData $docData');
+      bool res = await addPoem!.addPoemsAuthor(docData);
+      _registerEventAnalyticsAddPoems(_recipeNameController.value.text);
+      res
+          // ignore: use_build_context_synchronously
+          ? CherryToast.success(
+              title: const Text(
+                "Procesado con exito!!",
+                style: TextStyle(color: Colors.black, fontSize: 16),
+              ),
+            ).show(context)
+          : CherryToast.error(
+              title: const Text(
+                'En este momento no podemos procesar la solicitud, Por favor intente mas tarde agregar un poema',
+                style: TextStyle(color: Colors.black, fontSize: 16),
+              ),
+            ).show(context);
+      _recipeNameController.clear();
+      _lineStepsController.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color.fromARGB(255, 252, 252, 252),
+          content: Text(
+            'Por favor completa todos los campos',
+            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future _registerEventAnalyticsAddPoems(String value) async {
+    await analytics.logEvent(
+      name: 'addPoem',
+      parameters: <String, dynamic>{
+        'title': '$value',
+      },
+    );
+    // mostrarMensaje('logEvent succeeded');
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     analytics.setCurrentScreen(
         screenName: 'AddPoems', screenClassOverride: 'AddPoems');
     addPoem = BlocProvider.of<AuthorTitleBloc>(context);
+    super.initState();
   }
 
   @override
@@ -97,14 +154,13 @@ class _AppPoemasState extends State<AppPoemas> {
                 const SizedBox(
                   height: 20,
                 ),
+
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
-                    onPressed: () => {
-                      _registerEventAnalyticsAddPoems(
-                          _recipeNameController.value.text),
-                      _addPoems
-                    },
+                    onPressed: authorsAddPoems,
+                    //
+
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepOrangeAccent[100]),
                     child: const Text(
@@ -149,59 +205,6 @@ class _AppPoemasState extends State<AppPoemas> {
     for (var i = 0; i < lines.length; i++) {
       _previewStepsList.add(lines[i]);
     }
-  }
-
-  _addPoems() async {
-    String capitalize(String? s) => s![0].toUpperCase() + s.substring(1);
-    if (_recipeNameController.value.text.isNotEmpty &&
-        _lineStepsController.value.text.isNotEmpty) {
-      LineSplitter ls = const LineSplitter();
-      List<String> lines = ls.convert(_lineStepsController.value.text);
-      final docData = <String, dynamic>{
-        'title': capitalize(_recipeNameController.value.text),
-        'lineas': lines,
-        'author': user!.displayName,
-        'likes': 0
-      };
-      print('docData $docData');
-      bool res = await addPoem!.addPoemsAuthor(docData);
-      res
-          // ignore: use_build_context_synchronously
-          ? CherryToast.success(
-              title: const Text(
-                "Procesado con exito!!",
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
-            ).show(context)
-          : CherryToast.error(
-              title: const Text(
-                'En este momento no podemos procesar la solicitud, Por favor intente mas tarde agregar un poema',
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
-            ).show(context);
-      _recipeNameController.clear();
-      _lineStepsController.clear();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Color.fromARGB(255, 252, 252, 252),
-          content: Text(
-            'Por favor completa todos los campos',
-            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
-          ),
-        ),
-      );
-    }
-  }
-
-  Future _registerEventAnalyticsAddPoems(String value) async {
-    await analytics.logEvent(
-      name: 'addPoem',
-      parameters: <String, dynamic>{
-        'title': '$value',
-      },
-    );
-    // mostrarMensaje('logEvent succeeded');
   }
 }
 
