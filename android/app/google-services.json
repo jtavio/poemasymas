@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "153536167266",
+    "project_id": "poemasymas-469bd",
+    "storage_bucket": "poemasymas-469bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153536167266:android:40b3bfa863f799d4ce003b",
+        "android_client_info": {
+          "package_name": "com.apppoemas.poemasymas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153536167266-tntlls7bp5uv534145dvmfnek2mpl6h8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwYWh7iBf9WiZZWPM5WLvy1rfKxIry5Jg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153536167266-tntlls7bp5uv534145dvmfnek2mpl6h8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "153536167266-nduuvtttn4aecgnufcs2m3pvahjsne46.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.appPoemas"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
