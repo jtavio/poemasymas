@@ -164,7 +164,7 @@ class _InitPoemsState extends State<InitPoems> {
                                     Text(
                                       '${res[index]['title']}...',
                                       style: const TextStyle(fontSize: 20),
-                                      maxLines: 3,
+                                      maxLines: 2,
                                     ),
                                     Text(
                                       '${res[index]['lineas'][0]}...',
@@ -209,9 +209,12 @@ class _InitPoemsState extends State<InitPoems> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 30.0),
           child: FloatingActionButton.extended(
+            backgroundColor: const Color(0xFF64FFDA),
             onPressed: _actionButtonFloat,
             icon: const Icon(Icons.post_add_outlined),
-            label: const Text('Agregar'),
+            label: const Text(
+              'Agregar',
+            ),
           ),
         ),
         bottomNavigationBar: _isBannerAdReady

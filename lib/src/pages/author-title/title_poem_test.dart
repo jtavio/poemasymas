@@ -1,6 +1,6 @@
 import 'package:app_poemas/src/bloc/blocs.dart';
 import 'package:app_poemas/src/models/data_firestore.dart';
-import 'package:app_poemas/src/pages/author-title/author_title_poems.dart';
+
 import 'dart:io' show Platform, exit;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

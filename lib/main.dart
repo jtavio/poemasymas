@@ -59,9 +59,18 @@ class _MyAppState extends State<MyApp> {
       title: Constants.AppName,
       initialRoute: SignIn.routeName,
       theme: ThemeData(
-        backgroundColor: Colors.grey[100],
+        outlinedButtonTheme: OutlinedButtonThemeData(
+            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color?>(Colors.deepOrangeAccent[100]))),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color(0xFF64FFDA),
+          background: Color(0xFF64FFDA),
+        ),
+        //backgroundColor: Colors.grey[100],
         fontFamily: 'Montserrat',
         primaryColor: Colors.deepOrangeAccent[100],
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(0xFF64FFDA),
+        ),
       ),
       darkTheme: ThemeData.dark(),
       routes: routes,

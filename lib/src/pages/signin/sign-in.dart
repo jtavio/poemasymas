@@ -192,7 +192,7 @@ class _SignInState extends State<SignIn> {
                           },
                           child: const Text(
                             "Registrate",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                           ),
                         ),
                         const SizedBox(
@@ -204,7 +204,6 @@ class _SignInState extends State<SignIn> {
                           },
                           child: const Text(
                             "Continuar como Visitante",
-                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ],

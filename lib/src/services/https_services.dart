@@ -1,9 +1,6 @@
 import 'package:app_poemas/src/models/data_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:flutter/src/widgets/editable_text.dart';
-import 'package:http/http.dart';
-
 class HttpServices {
   final db = FirebaseFirestore.instance;
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/link.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:in_app_review/in_app_review.dart';
 import 'package:app_poemas/src/bloc/blocs.dart';
 import 'package:app_poemas/src/pages/add-poemas/add_poems.dart';
@@ -34,8 +34,7 @@ class _ProfileUserState extends State<ProfileUser> {
   Widget build(BuildContext context) {
     if (user != null) {
       _controllerEmail.text = user!.email!;
-      _controllerName.text =
-          user!.displayName != null ? user!.displayName! : '';
+      _controllerName.text = user!.displayName != null ? user!.displayName! : '';
       return Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -82,8 +81,7 @@ class _ProfileUserState extends State<ProfileUser> {
                               child: ClipOval(
                                 child: FadeInImage(
                                   image: NetworkImage("${user!.photoURL}"),
-                                  placeholder: const AssetImage(
-                                      'assets/images/loading.gif'),
+                                  placeholder: const AssetImage('assets/images/loading.gif'),
                                 ),
                               ),
                             ),
@@ -91,8 +89,7 @@ class _ProfileUserState extends State<ProfileUser> {
                         : const Center(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
-                              backgroundImage:
-                                  AssetImage('assets/images/account.png'),
+                              backgroundImage: AssetImage('assets/images/account.png'),
                               radius: 40,
                             ),
                           ),
@@ -159,31 +156,27 @@ class _ProfileUserState extends State<ProfileUser> {
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xFFdddddd))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
+                              border: Border.all(width: 1.0, color: const Color(0xFFdddddd))),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: const <Widget>[
-                                Icon(Icons.post_add_outlined,
-                                    size: 20.0, color: Colors.white),
+                              children: <Widget>[
+                                Icon(
+                                  Icons.post_add_outlined,
+                                  size: 20.0,
+                                ),
                                 SizedBox(
                                   width: 15,
                                 ),
                                 Text(
                                   'Escribir Poemas',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.white),
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                                 ),
                                 Spacer(),
                                 Icon(
                                   Icons.arrow_forward_ios,
                                   size: 15,
-                                  color: Colors.white,
                                 ),
                               ],
                             ),
@@ -198,28 +191,22 @@ class _ProfileUserState extends State<ProfileUser> {
                       child: InkWell(
                         onTap: () {
                           inAppReview.openStoreListing(
-                              appStoreId: '...',
-                              microsoftStoreId: Constants.GooglePlayIdentifier);
+                              appStoreId: '...', microsoftStoreId: Constants.GooglePlayIdentifier);
                         },
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xFFdddddd))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
+                              border: Border.all(width: 1.0, color: const Color(0xFFdddddd))),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: const <Widget>[
+                              children: <Widget>[
                                 Icon(Icons.rate_review_outlined, size: 20.0),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                Text('Calificanos',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.normal)),
+                                Text('Calificanos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
                                 Spacer(),
                                 Icon(
                                   Icons.arrow_forward_ios,
@@ -237,8 +224,7 @@ class _ProfileUserState extends State<ProfileUser> {
                     ),
                     const Text(
                       'Informacion Legal',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                       textAlign: TextAlign.start,
                     ),
                     const SizedBox(
@@ -254,24 +240,18 @@ class _ProfileUserState extends State<ProfileUser> {
                           child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                    width: 1.0,
-                                    color: const Color(0xFFdddddd))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 15),
+                                border: Border.all(width: 1.0, color: const Color(0xFFdddddd))),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: const <Widget>[
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
                                   Icon(Icons.info_outline_rounded, size: 20.0),
                                   SizedBox(
                                     width: 15,
                                   ),
                                   Text('Politicas de privacidad',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.normal)),
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
                                   Spacer(),
                                   Icon(
                                     Icons.arrow_forward_ios,
@@ -312,9 +292,7 @@ class _ProfileUserState extends State<ProfileUser> {
         ),
         const Padding(
           padding: EdgeInsets.all(15),
-          child: Text(
-              "Ingresa a tu cuenta para gestionar tu perfil, preferencias y más",
-              textAlign: TextAlign.center),
+          child: Text("Ingresa a tu cuenta para gestionar tu perfil, preferencias y más", textAlign: TextAlign.center),
         ),
         Center(
           child: Padding(
@@ -325,7 +303,7 @@ class _ProfileUserState extends State<ProfileUser> {
                   builder: (context) => const SignIn(),
                 ),
               ),
-              child: Column(children: const [
+              child: const Column(children: [
                 Center(
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
