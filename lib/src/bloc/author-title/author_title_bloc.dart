@@ -9,17 +9,13 @@ part 'author_title_state.dart';
 class AuthorTitleBloc extends Bloc<AuthorTitleEvent, AuthorTitleState> {
   HttpServices httpServices;
   AuthorTitleBloc({required this.httpServices}) : super(AuthorTitleInitial()) {
-    on<LoadApiTitleForAuthorEvent>(
-        (event, emit) => emit(state.copyWith(author: event.author)));
-    on<SaveNameAuthor>(
-        (event, emit) => emit(state.copyWith(counterLike: event.counterLike)));
-    on<DeleteCounterLikeState>(
-        (event, emit) => emit(state.copyWith(counterLike: event.counter)));
-    on<DeleteTitlePoemState>(
-        (event, emit) => emit(state.copyWith(author: event.deleteAuthor)));
+    on<LoadApiTitleForAuthorEvent>((event, emit) => emit(state.copyWith(author: event.author)));
+    on<SaveNameAuthor>((event, emit) => emit(state.copyWith(counterLike: event.counterLike)));
+    on<DeleteCounterLikeState>((event, emit) => emit(state.copyWith(counterLike: event.counter)));
+    on<DeleteTitlePoemState>((event, emit) => emit(state.copyWith(author: event.deleteAuthor)));
   }
 
-  Future getItemTitleAuthor(String id) async {
+  Future getItemTitleAuthor(String? id) async {
     final authorAll = await httpServices.getItemsAuthor(id);
     add(LoadApiTitleForAuthorEvent(authorAll));
   }
@@ -29,7 +25,7 @@ class AuthorTitleBloc extends Bloc<AuthorTitleEvent, AuthorTitleState> {
     return res;
   }
 
-  Future addLike(String id, int value) async {
+  Future addLike(String? id, int? value) async {
     await httpServices.addLike(id, value);
   }
 }

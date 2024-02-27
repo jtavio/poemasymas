@@ -9,6 +9,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,6 +33,7 @@ class _AppPoemasState extends State<AppPoemas> {
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   Future addPoems() async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
     String capitalize(String? s) => s![0].toUpperCase() + s.substring(1);
     if (_recipeNameController.value.text.isNotEmpty && _lineStepsController.value.text.isNotEmpty) {
       LineSplitter ls = const LineSplitter();
@@ -39,13 +41,14 @@ class _AppPoemasState extends State<AppPoemas> {
       final docData = <String, dynamic>{
         'title': capitalize(_recipeNameController.value.text),
         'lineas': lines,
-        'author': user!.displayName,
-        'likes': 0
+        'author': user?.displayName,
+        'likes': 0,
+        'idfcm': fcmToken,
+        'uidUser': user?.uid,
       };
-      print('docData $docData');
+      debugPrint('docData $docData');
       bool res = await addPoem!.addPoemsAuthor(docData);
       res
-          // ignore: use_build_context_synchronously
           ? CherryToast.success(
               title: const Text(
                 "Procesado con exito!!",
@@ -196,7 +199,7 @@ class _AppPoemasState extends State<AppPoemas> {
     await analytics.logEvent(
       name: 'addPoem',
       parameters: <String, dynamic>{
-        'title': '$value',
+        'title': value,
       },
     );
     // mostrarMensaje('logEvent succeeded');

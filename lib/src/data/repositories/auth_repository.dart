@@ -4,13 +4,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthRepository {
   final _firebaseAuth = FirebaseAuth.instance;
 
-  Future<void> signUp(
-      {required String email,
-      required String password,
-      String? displayName}) async {
+  Future<void> signUp({required String email, required String password, String? displayName}) async {
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       await FirebaseAuth.instance.currentUser!.updateDisplayName(displayName);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -28,8 +24,7 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw Exception('No user found for that email.');
@@ -50,11 +45,19 @@ class AuthRepository {
   }
 
   Future<void> signInWithGoogle() async {
+    const List<String> scopes = <String>[
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ];
+    GoogleSignIn _googleSignIn = GoogleSignIn(
+      // Optional clientId
+      // clientId: 'your-client_id.apps.googleusercontent.com',
+      scopes: scopes,
+    );
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,

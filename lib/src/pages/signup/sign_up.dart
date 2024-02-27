@@ -90,12 +90,9 @@ class _SignUpState extends State<SignUp> {
                                   hintText: "Nombre",
                                   border: OutlineInputBorder(),
                                 ),
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
                                 validator: (value) {
-                                  return value == ''
-                                      ? 'Ingrese el nombre'
-                                      : null;
+                                  return value == '' ? 'Ingrese el nombre' : null;
                                 },
                               ),
                               const SizedBox(
@@ -107,11 +104,9 @@ class _SignUpState extends State<SignUp> {
                                   hintText: "Email",
                                   border: OutlineInputBorder(),
                                 ),
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
                                 validator: (value) {
-                                  return value != null &&
-                                          !EmailValidator.validate(value)
+                                  return value != null && !EmailValidator.validate(value)
                                       ? 'Ingrese un email valido'
                                       : null;
                                 },
@@ -125,12 +120,9 @@ class _SignUpState extends State<SignUp> {
                                   hintText: "Password",
                                   border: OutlineInputBorder(),
                                 ),
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
                                 validator: (value) {
-                                  return value != null && value.length < 6
-                                      ? "Ingrese un min. de 6 caracteres"
-                                      : null;
+                                  return value != null && value.length < 6 ? "Ingrese un min. de 6 caracteres" : null;
                                 },
                               ),
                               const SizedBox(
@@ -142,8 +134,7 @@ class _SignUpState extends State<SignUp> {
                                   onPressed: () {
                                     _createAccountWithEmailAndPassword(context);
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                      primary: Colors.deepOrangeAccent[100]),
+                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrangeAccent[100]),
                                   child: const Text('Registrar'),
                                 ),
                               )
@@ -159,8 +150,7 @@ class _SignUpState extends State<SignUp> {
                         onPressed: () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => const SignIn()),
+                            MaterialPageRoute(builder: (context) => const SignIn()),
                           );
                         },
                         child: const Text("Iniciar sesión"),
@@ -195,8 +185,7 @@ class _SignUpState extends State<SignUp> {
     String capitalize(String? s) => s![0].toUpperCase() + s.substring(1);
     if (_formKey.currentState!.validate()) {
       BlocProvider.of<AuthBloc>(context).add(
-        SignUpRequested(_emailController.text, _passwordController.text,
-            capitalize(_nameController.text)),
+        SignUpRequested(_emailController.text, _passwordController.text, capitalize(_nameController.text)),
       );
     }
   }

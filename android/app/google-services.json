@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "153536167266-944e27fbfr6kvjnb4at9rst0hmvof6lb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apppoemas.poemasymas",
+            "certificate_hash": "090281c84bfef48a9d1a47597738798b60f9de46"
+          }
+        },
+        {
+          "client_id": "153536167266-ta459eapdkcddrbopjujdnh9fl3pl7et.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apppoemas.poemasymas",
+            "certificate_hash": "0ff44244eccd3f888cd5cee54955caee932f51b9"
+          }
+        },
+        {
           "client_id": "153536167266-tntlls7bp5uv534145dvmfnek2mpl6h8.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -39,7 +55,8 @@
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-2793000965286035~3088628659"
     }
   ],
   "configuration_version": "1"

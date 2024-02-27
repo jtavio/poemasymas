@@ -25,7 +25,6 @@ class AuthorTitleState extends Equatable {
   @override
   List<Object?> get props => [author, counterLike, error];
 
-  @override
   String tostring() =>
       '{poemsTitle: $author, nameAuthor: $counterLike, error: $error}';
 }

@@ -1,6 +1,6 @@
 import 'package:app_poemas/src/bloc/blocs.dart';
 import 'package:app_poemas/src/models/data_firestore.dart';
-
+import 'package:app_poemas/src/services/https_services.dart';
 import 'dart:io' show Platform, exit;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,14 +9,16 @@ import 'package:share_plus/share_plus.dart';
 
 class TitlePoemByAuthor extends StatefulWidget {
   static const routeName = '/titlepoem';
-  String? id;
-  TitlePoemByAuthor({Key? key, this.id}) : super(key: key);
+  final String? id;
+
+  const TitlePoemByAuthor({Key? key, this.id}) : super(key: key);
 
   @override
   State<TitlePoemByAuthor> createState() => _TitlePoemByAuthorState();
 }
 
 class _TitlePoemByAuthorState extends State<TitlePoemByAuthor> {
+  String? fcmToken;
   Author? title;
   Future<bool> _onWillPop() async {
     return (await showDialog(
@@ -47,9 +49,8 @@ class _TitlePoemByAuthorState extends State<TitlePoemByAuthor> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    title = BlocProvider.of<AuthorTitleBloc>(context).state.author!;
+    title = BlocProvider.of<AuthorTitleBloc>(context).state.author;
   }
 
   @override
@@ -65,6 +66,7 @@ class _TitlePoemByAuthorState extends State<TitlePoemByAuthor> {
   }
 }
 
+// ignore: must_be_immutable
 class _BotonShared extends StatefulWidget {
   String? id;
   Author? title;
@@ -94,13 +96,18 @@ class _BotonSharedState extends State<_BotonShared> {
               sum = (widget.title!.likes! + 1);
             });
             AuthorTitleBloc addPoem = BlocProvider.of<AuthorTitleBloc>(context);
-            await addPoem.addLike(widget.id!, sum!);
+            await addPoem.addLike(widget.id, sum!);
             addPoem.add(SaveNameAuthor(sum.toString()));
+            if (widget.title?.idfcm != null) {
+              String idFCM = widget.title?.idfcm.toString() ?? "";
+
+              await HttpServices().sendNotification(idFCM);
+            }
           },
         ),
         nameTitle.state.counterLike == ""
             ? Text(
-                '${widget.title!.likes!}',
+                '${widget.title?.likes}',
                 style: const TextStyle(fontSize: 16),
               )
             : Text(
@@ -127,8 +134,8 @@ class _BotonSharedState extends State<_BotonShared> {
               //   result = texto.join('');
               //   print('${elem.author}');
 
-              await Share.share('Title: ${widget.title!.title}\n${widget.title!.lineas!.join(' ')}',
-                  subject: 'Title: ${widget.title!.author}');
+              await Share.share('Title: ${widget.title?.title}\n${widget.title?.lineas?.join(' ')}',
+                  subject: 'Title: ${widget.title?.author}');
             }),
       ],
     );
@@ -168,13 +175,13 @@ class _MainScroll extends StatelessWidget {
                     return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: state.author!.lineas!.length,
+                      itemCount: state.author?.lineas?.length,
                       itemBuilder: (context, index) {
                         return Center(
                             child: Padding(
                           padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 20.0),
                           child: Text(
-                            '" ${state.author!.lineas![index]} "',
+                            '" ${state.author?.lineas?[index]} "',
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
@@ -186,7 +193,7 @@ class _MainScroll extends StatelessWidget {
                   }
                   if (state.error != null) {
                     return Center(
-                      child: Text(state.error!['message']),
+                      child: Text(state.error?['message']),
                     );
                   }
                   return const Padding(
@@ -257,7 +264,7 @@ class _Titulo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${value!.title.toString()}...',
+                      '${value?.title.toString()}...',
                       maxLines: 3,
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
@@ -280,7 +287,7 @@ class _Titulo extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: Text(
                   textAlign: TextAlign.left,
-                  'autor: ${capitalize(value!.author)}',
+                  'autor: ${capitalize(value?.author)}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

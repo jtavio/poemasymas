@@ -24,10 +24,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
               icon: Icon(Icons.account_circle_outlined),
               label: 'Perfil',
             ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.shopping_bag),
-            //   label: 'Promotions',
-            // )
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications_none_outlined),
+              label: 'Notificaciones',
+            )
           ],
         );
       },

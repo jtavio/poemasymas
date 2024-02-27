@@ -1,19 +1,23 @@
+import 'dart:convert';
+
 import 'package:app_poemas/src/models/data_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class HttpServices {
   final db = FirebaseFirestore.instance;
+  final dio = Dio();
 
-  // final url = 'https://poetrydb.org/';
-
-  Future getItemsAuthor(String id) async {
+  Future getItemsAuthor(String? id) async {
     final ref = db.collection("authors").doc(id).withConverter(
           fromFirestore: Author.fromFirestore,
           toFirestore: (Author city, _) => city.toFirestore(),
         );
     final docSnap = await ref.get();
     final authorId = docSnap.data();
-    print('data $authorId');
+    debugPrint('data $authorId');
     return authorId;
 
     // final resp =
@@ -23,9 +27,19 @@ class HttpServices {
     // return data;
   }
 
-  Future addLike(String id, int more) async {
+  Future addLike(String? id, int? more) async {
     final likeRef = db.collection("authors").doc(id);
     likeRef.update({"likes": more});
+  }
+
+  Future sendNotification(String dataUser) async {
+    try {
+      final response =
+          await dio.post('https://firebase-get-poems-1.onrender.com/send', data: jsonEncode({"token": dataUser}));
+      debugPrint('response ${response.data}');
+    } catch (e) {
+      debugPrint('error ${e.toString()}');
+    }
   }
 
   // Future<List<TitleByAuthor>> getTitlePoem(String name, String title) async {

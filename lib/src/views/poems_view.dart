@@ -24,19 +24,16 @@ class _PoemsViewState extends State<PoemsView> {
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   @override
   void initState() {
-    streamController.stream
-        .debounce(const Duration(seconds: 2))
-        .listen((event) => _validateValues());
+    streamController.stream.debounce(const Duration(seconds: 2)).listen((event) => _validateValues());
     super.initState();
-    FirebaseAnalytics.instance.setCurrentScreen(
-        screenName: 'Home-View', screenClassOverride: 'Home-View');
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'Home-View', screenClassOverride: 'Home-View');
   }
 
   _validateValues() {
     if (editingController.text.length > 3) {
       // code here
       Future.delayed(const Duration(seconds: 2));
-      print('esto es: ${editingController.text}');
+      debugPrint('esto es: ${editingController.text}');
     }
   }
 

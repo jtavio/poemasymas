@@ -26,7 +26,7 @@ class _HomeAuthorsState extends State<HomeAuthors> {
             ),
             child: TabsScreen(index: currentTabIndex),
           ),
-          bottomNavigationBar: CustomBottomNavigationBar(),
+          bottomNavigationBar: const CustomBottomNavigationBar(),
         );
       },
     );

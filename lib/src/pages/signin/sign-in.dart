@@ -170,7 +170,7 @@ class _SignInState extends State<SignIn> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Image.network(
-                                  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png",
+                                  "https://cdn-icons-png.flaticon.com/512/2875/2875331.png",
                                   height: 30,
                                   width: 30,
                                 ),

@@ -30,7 +30,6 @@ class InitPoems extends StatefulWidget {
 }
 
 class _InitPoemsState extends State<InitPoems> {
-  static const AdRequest request = AdRequest();
   late BannerAd _bannerAd;
   bool _isBannerAdReady = false;
   User? user;
@@ -39,7 +38,6 @@ class _InitPoemsState extends State<InitPoems> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     FirebaseAnalytics.instance.setCurrentScreen(screenName: 'HomeInitPoems', screenClassOverride: 'HomeInitPoems');
     _loadBannerAd();
@@ -54,14 +52,14 @@ class _InitPoemsState extends State<InitPoems> {
       listener: BannerAdListener(
         onAdLoaded: (_) {
           setState(() {
-            print('onAdLoaded: true');
+            debugPrint('onAdLoaded: true');
             _isBannerAdReady = true;
           });
         },
         onAdFailedToLoad: (ad, err) {
-          print('onAdLoaded: false');
-          print('onAdLoaded: false $err');
-          print('onAdLoaded: false $ad');
+          debugPrint('onAdLoaded: false');
+          debugPrint('onAdLoaded: false $err');
+          debugPrint('onAdLoaded: false $ad');
           _isBannerAdReady = false;
           ad.dispose();
         },
@@ -143,7 +141,7 @@ class _InitPoemsState extends State<InitPoems> {
                         child: CircularProgressIndicator(),
                       );
                     }
-                    final res = snapshot.data!.docs;
+                    final res = snapshot.data?.docs;
                     if (snapshot.data!.docs.isEmpty) {
                       return const Center(child: Text('No hay Peomas para mostrar'));
                     }
@@ -152,7 +150,7 @@ class _InitPoemsState extends State<InitPoems> {
                       child: GridView(
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                         children: List.generate(
-                          res.length,
+                          res?.length ?? 0,
                           (index) {
                             return Card(
                               color: const Color.fromARGB(178, 155, 155, 155),
@@ -162,27 +160,27 @@ class _InitPoemsState extends State<InitPoems> {
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
-                                      '${res[index]['title']}...',
+                                      '${res?[index]['title']}...',
                                       style: const TextStyle(fontSize: 20),
                                       maxLines: 2,
                                     ),
                                     Text(
-                                      '${res[index]['lineas'][0]}...',
+                                      '${res?[index]['lineas'][0]}...',
                                       maxLines: 3,
                                       style: const TextStyle(fontSize: 16),
                                     ),
                                     MaterialButton(
                                       color: const Color.fromARGB(255, 82, 209, 171),
                                       onPressed: () async {
-                                        _registerEventAnalyticsAuthorTitle(res[index]['title']);
+                                        debugPrint(res?[index].id);
+                                        _registerEventAnalyticsAuthorTitle(res?[index]['title']);
 
-                                        print('${res[index].id}');
-                                        await widget.titleAuthor.getItemTitleAuthor(res[index].id);
-
+                                        await widget.titleAuthor.getItemTitleAuthor(res?[index].id);
+                                        if (!mounted) return;
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) => TitlePoemByAuthor(
-                                              id: res[index].id,
+                                              id: res?[index].id,
                                             ),
                                           ),
                                         );
@@ -231,7 +229,7 @@ class _InitPoemsState extends State<InitPoems> {
     await widget.analytics.logEvent(
       name: 'authorTitleHome',
       parameters: <String, dynamic>{
-        'id': '$index',
+        'id': index,
       },
     );
     // mostrarMensaje('logEvent succeeded');
